@@ -1,0 +1,87 @@
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Switch, Route, useLocation } from 'react-router-dom';
+
+// components
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import About from './components/About';
+import Projects from './components/Projects';
+import Blog from './components/Blog';
+import Footer from './components/Footer';
+import NotFound from './components/NotFound';
+import GlobalStyles from './styles/GlobalStyle';
+
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme.js';
+
+const Container = styled.div`
+  margin: 0;
+  padding: 0;
+  transition: color 0.5s, background-color 0.5s;
+  color: ${(props) => props.theme.text};
+  background: ${(props) =>
+    props.location ? props.theme.background : props.theme.backgroundStart};
+`;
+
+const Content = styled.div`
+  min-height: calc(100vh - 3.5rem);
+  margin-bottom: -3.5rem;
+  z-index: 10;
+  filter: ${(props) => (props.isOpen ? 'blur(0.2rem)' : 'none')};
+  max-width: 60rem;
+  margin: 0 auto;
+  margin-top: 3.4rem;
+`;
+
+const App = () => {
+  const [scroll, setScroll] = useState(false);
+
+  useEffect(() => {
+    console.log(scroll);
+    document.addEventListener('scroll', () => {
+      setScroll(window.scrollY > 1);
+    });
+  }, []);
+
+  const [theme, setTheme] = useState('light');
+
+  const [isOpen, setIsOpen] = useState(false);
+  let path = useLocation().pathname;
+  const location = path.split('/')[1];
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [path]);
+
+  return (
+    <div>
+      <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+        <GlobalStyles />
+        <Container location={location}>
+          <Navbar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            theme={theme}
+            setTheme={setTheme}
+            scroll={scroll}
+            location={location}
+          />
+          <main>
+            <Content isOpen={isOpen}>
+              <Switch>
+                <Route exact path="/projects" component={Projects} />
+                <Route path="/about" component={About} />
+                <Route exact path="/" component={Home} />
+                <Route path="/blog" component={Blog} />
+                <Route component={NotFound} />
+              </Switch>
+            </Content>
+          </main>
+          <Footer location={location} />
+        </Container>
+      </ThemeProvider>
+    </div>
+  );
+};
+
+export default App;
