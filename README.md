@@ -3,7 +3,7 @@
   - React
   - React Router
   - Styled Components
-- Link website: [Suki-Poenya](tpa4-personal-web-router.netlify.app)
+- Link website: [Suki-Poenya](https://tpa4-personal-web-router.netlify.app/p)
 - Screenshot:
 
 
